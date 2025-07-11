@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modificar Producto</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}" />
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="container__menu">
+            <div class="menu">
+                <input type="checkbox" id="check__menu" />
+                <label for="check__menu" id="label__check">
+                    <i class="icon__menu">☰</i>
+                </label>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'index' %}"></a></li>
+                        <li>
+                            <a href="{% url 'tienda' %}">Productos</a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'contacto' %}">Contáctanos</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Nosotros' %}">Sobre Nosotros</a>
+                        </li>
+                        <li class="search-bar">
+                            <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'perfil' %}"></a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'productos' %}">Inventario</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listar_boletas' %}">Boletas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'cerrar' %}">Cerrar sesión</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}"></a></li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2>Modificando Planta</h2>
+        <br />
+
+        <form action="#" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                {{ forModificar.idPlanta.label }}: {{ forModificar.idPlanta}}
+            </div>
+
+            <div class="form-group">
+                {{ forModificar.nombre.label }}: {{ forModificar.nombre}}
+            </div>
+
+            <div class="form-group">
+                {{ forModificar.descripcion.label }}: {{ forModificar.descripcion}}
+            </div>
+
+            <div class="form-group">
+                {{ forModificar.categoria.label }}: {{ forModificar.categoria}}
+            </div>
+
+            <div class="form-group">
+                {{ forModificar.precio.label }}: {{ forModificar.precio}}
+            </div>
+
+            <div class="form-group">
+                {{ forModificar.stock.label }}: {{ forModificar.stock}}
+            </div>
+
+            {% if planta.imagen %}
+            <img src="{{ planta.imagen.url }}" width="200px" />
+            {% else %}
+            <h4 style="color: red">Producto sin foto</h4>
+            {% endif %}
+            <div class="form-group">
+                {{ forModificar.imagen.label }} {{ forModificar.imagen}}
+            </div>
+
+            <input type="submit" value="Modificar" class="btn btn-success" />
+            <a href="{% url 'productos' %}" class="btn btn-success">Ir a Productos</a>
+        </form>
+    </main>
+</body>
+
+</html>

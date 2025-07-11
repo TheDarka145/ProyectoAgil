@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil</title>
+  {% load static %}
+  <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+  <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+</head>
+<style>
+  .perfil-container {
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: fit-content;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body {
+    flex: 1;
+  }
+
+  main {
+    flex: 1;
+  }
+</style>
+
+<body>
+  <header>
+    <div class="container__menu">
+      <div class="menu">
+        <input type="checkbox" id="check__menu">
+        <label for="check__menu" id="label__check">
+          <i class="icon__menu">☰</i>
+        </label>
+        <nav>
+          <ul>
+            <li><a href="{% url 'index' %}"></a></li>
+            <li>
+              <a href="{% url 'tienda' %}">Productos</a>
+              <ul>
+                <li>
+                  <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                </li>
+              </ul>
+            </li>
+            <li><a href="{% url 'contacto' %}">Contáctanos</a></li>
+            <li><a href="{% url 'Nosotros' %}">Sobre Nosotros</a></li>
+            <li class="search-bar">
+              <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+              <a href="{% url 'perfil' %}"></a>
+              <ul>
+                <li><a href="{% url 'productos' %}">Inventario</a></li>
+                <li><a href="{% url 'listar_boletas' %}">Boletas</a></li>
+                <li><a href="{% url 'cerrar' %}">Cerrar sesión</a></li>
+              </ul>
+            </li>
+            <li><a href="{% url 'carrito' %}"></a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}"></a></li>
+            <li><a href="{% url 'carrito' %}"></a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="perfil-container" style="color: #2C3E50;">
+      <h1 class="titulo-seccion text-center mb-5" style="
+              font-family: Montserrat, sans-serif;
+              font-weight: 900;
+              color: #2c3e50;
+              font-size: 30px;
+            ">Datos del Usuario</h1>
+      <div class="text-center mb-3">
+        <img src="https://assets.stickpng.com/images/585e4beacb11b227491c3399.png" alt="Icono de perfil"
+          class="img-fluid rounded-circle" style="max-width: 100px;" />
+      </div>
+      <p><strong>Usuario:</strong> {{ usuario }}</p>
+      <p><strong>Email:</strong> {{ email }}</p>
+      <p><strong>Nombre:</strong> {{ nombre }}</p>
+      <p><strong>Apellido:</strong> {{ apellido }}</p>
+      <div class="text-center">
+        <a href="{% url 'editar' %}"
+          style="padding: 8px 16px; border: none; background-color: #1A5276; color: white; border-radius: 5px; cursor: pointer;">Editar
+          perfil</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="pie-pagina">
+    <div class="grupo-1">
+      <div class="box">
+        <figure>
+          <a href="#">
+            <img src="{% static 'img/footer.jpg'  %}" alt="">
+          </a>
+        </figure>
+      </div>
+      <div class="box">
+        <h2>SOBRE NOSOTROS</h2>
+        <p>Maestranzas Unidos S.A. es una empresa de Copiapó dedicada a la fabricación y mantenimiento de
+          equipos pesados para minería y construcción, con más de 20 años de experiencia y compromiso con la excelencia.
+        </p>
+      </div>
+      <div class="box">
+        <h2>SIGUENOS</h2>
+        <div class="red-social">
+          <a href="#">
+            <img src="{% static 'img/facebook_logo.png'  %}" alt="facebook_logo" width="25px" height="25px">
+          </a>
+          <a href="#">
+            <img src="{% static 'img/ig_logo.png'  %}" alt="ig_logo" width="25px" height="25px">
+          </a>
+          <a href="#">
+            <img src="{% static 'img/correo_logo.png'  %}" alt="correo_logo" width="25px" height="25px">
+
+        </div>
+      </div>
+    </div>
+    <div class="grupo-2">
+      <small>©2025 <b>MAESTRANZAS UNIDOS S.A.</b> - Todos Los Derechos Reservados</small>
+    </div>
+  </footer>
+</body>
+
+</html>

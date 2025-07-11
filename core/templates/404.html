@@ -1,0 +1,15 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/404.css' %}">
+
+<main class="bsod container">
+  <h1 class="neg title"><span class="bg">Error - 404</span></h1>
+  <p>Se ha producido un error. Para continuar:
+  <p>{{mensaje}}</p>
+  </p>
+  <p>* Volver a nuestra página de inicio.<br />
+    * Envíenos un correo electrónico informando sobre este error e inténtelo más tarde.</p>
+  <nav class="nav">
+    <a href="{% url 'index' %}" class="link">Volver</a>&nbsp;|&nbsp;<a href="{% url 'contacto' %}"
+      class="link">Contactanos</a>
+  </nav>
+</main>

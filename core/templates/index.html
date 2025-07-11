@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ferretería</title>
+  {% load static %}
+  <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+  <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}" />
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+  <header>
+    <div class="container__menu">
+      <div class="menu">
+        <input type="checkbox" id="check__menu">
+        <label for="check__menu" id="label__check">
+          <i class="icon__menu">☰</i>
+        </label>
+        <nav>
+          <ul>
+            <li><a href="{% url 'index' %}"></a></li>
+            <li>
+              <a href="{% url 'tienda' %}">Productos</a>
+              <ul>
+                <li>
+                  <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                </li>
+              </ul>
+            </li>
+            <li><a href="{% url 'contacto' %}">Contáctanos</a></li>
+            <li><a href="{% url 'Nosotros' %}">Sobre Nosotros</a></li>
+            <li class="search-bar">
+              <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+              <a href="{% url 'perfil' %}"></a>
+              <ul>
+                <li><a href="{% url 'productos' %}">Inventario</a></li>
+                <li><a href="{% url 'listar_boletas' %}">Boletas</a></li>
+                <li><a href="{% url 'cerrar' %}">Cerrar sesión</a></li>
+              </ul>
+            </li>
+            <li><a href="{% url 'carrito' %}"></a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}"></a></li>
+            <li><a href="{% url 'carrito' %}"></a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <article class="mb-4" style="background: #f0f0f0;">
+      <div id="mainCarousel" class="carousel slide carousel-fade" data-ride="carousel" data-interval="5000">
+        <ol class="carousel-indicators">
+          <li data-target="#mainCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#mainCarousel" data-slide-to="1"></li>
+          <li data-target="#mainCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img
+              src="{% static 'img/carrusel1.jpeg'%}"
+              class="d-block w-100" alt="Promoción 1" />
+          </div>
+          <div class="carousel-item">
+            <img
+              src="{% static 'img/carrusel2.jpeg'%}"
+              class="d-block w-100" alt="Promoción 2" />
+          </div>
+          <div class="carousel-item">
+            <img
+              src="{% static 'img/carrusel3.jpeg'%}"
+              class="d-block w-100" alt="Promoción 3" />
+          </div>
+        </div>
+
+        <a class="carousel-control-prev" href="#mainCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"
+            style="background-color: rgba(0, 0, 0, 0.5); border-radius: 50%"></span>
+          <span class="sr-only">Anterior</span>
+        </a>
+        <a class="carousel-control-next" href="#mainCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"
+            style="background-color: rgba(0, 0, 0, 0.5); border-radius: 50%"></span>
+          <span class="sr-only">Siguiente</span>
+        </a>
+      </div>
+    </article>
+
+    <article>
+      <div class="container text-center">
+        <h2 style="
+              font-family: Montserrat, sans-serif;
+              font-weight: 800;
+              color: #2c3e50;
+              font-size: 30px;
+              margin-bottom: 0.5rem;
+            ">
+          Categorías Destacadas
+        </h2>
+
+        <h1 style="
+              font-family: Montserrat, sans-serif;
+              font-weight: 400;
+              color: #2c3e50;
+              font-size: 20px;
+              margin-bottom: 1.8rem;
+            ">
+          Lo más buscado de la temporada seguro lo encuentras aquí
+          </h2>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <div class="card">
+            <img class="card-img-top"
+              src="https://ferreterialider.com/wp-content/uploads/2022/08/Herramientas-para-la-casa-C-1-800x533.jpg"
+              alt="Herramientas Manuales" />
+            <div class="card-body">
+              <h4 class="card-title">Herramientas Manuales</h4>
+              <a href="{% url 'tienda' %}" class="btncard">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md">
+          <div class="card">
+            <img class="card-img-top"
+              src="https://clensa.com/wp-content/uploads/Aceite-Lubrication-Engineers.png"
+              alt="Aceites" />
+            <div class="card-body">
+              <h4 class="card-title">Aceites Industriales</h4>
+              <a href="{% url 'tienda' %}" class="btncard">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md">
+          <div class="card">
+            <img class="card-img-top"
+              src="https://compraco.com.br/cdn/shop/articles/Os-10-melhores-fabricantes-e-marcas-de-maquinas-de-solda.jpg?v=1714557623"
+              alt="Soldadura" />
+            <div class="card-body">
+              <h4 class="card-title">Equipos de Soldadura</h4>
+              <a href="{% url 'tienda' %}" class="btncard">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md">
+          <div class="card">
+            <img class="card-img-top"
+              src="https://productiontools.es/wp-content/uploads/2020/04/herramientas-industriales.jpg"
+              alt="Herramientas Industriales" />
+            <div class="card-body">
+              <h4 class="card-title">Herramientas Industriales</h4>
+              <a href="{% url 'tienda' %}" class="btncard">Ver más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article>
+      <div class="remember">
+        <img src="https://www.cincopinos.cl/cdn/shop/files/Como_llega_la_Planta_1_1000x.gif?v=1619822712"
+          alt="Recuerda" />
+        <div class="remember-description">
+          <h2 style="font-family: Montserrat, sans-serif;
+              font-weight: 800;
+              color: #2c3e50;
+              font-size: 30px;
+              margin-bottom: 0.5rem;">Importante</h2>
+          <p>
+            Algunos productos pueden variar en presentación o empaque según el
+            proveedor o la temporada. Si tienes dudas, contáctanos antes de
+            comprar.
+          </p>
+          <p>
+            Siempre revisamos nuestros productos antes de enviarlos para
+            asegurarnos de que estén en óptimas condiciones.
+          </p>
+          <p>
+            <strong>Además, cada compra que realizas con nosotros contribuye a la
+              plantación de árboles en zonas que lo necesitan. Juntos
+              construimos, y también reforestamos.</strong>
+          </p>
+          <a href="{% url 'tienda' %}">Ver Productos</a>
+        </div>
+      </div>
+    </article>
+    <article class="bg-white py-5 mb-4">
+      <div class="container text-center">
+        <h2 style="
+              font-family: Montserrat, sans-serif;
+              font-weight: 900;
+              color: #2c3e50;
+              font-size: 20px;
+              font-style: normal;
+
+            ">
+          Tenemos las marcas de los profesionales
+        </h2>
+        <div id="brandCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="d-flex justify-content-center flex-wrap gap-3">
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/d59986e9-2557-47f9-b241-57abba7bb6dd___8a58e2b7d2356ddcd791150f0e691315.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 1" />
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/a618e65d-b2dd-48a5-8d70-668270838f75___9150459bf891ddab26a93be6e3b1c746.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 2" />
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/dab9d8f7-ed9e-46a7-a9aa-935b5e2bd895___bf06ab120f5f9b5f5c39b2f531c66ed5.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 3" />
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/ceed2a9e-7e72-400e-9002-b26c3aa538d3___e0c696919d10bd9e0e7447e44cb4a40f.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 4" />
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="d-flex justify-content-center flex-wrap gap-3">
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/b081e73f-7414-47b6-a344-f113359b9818___9077814760374d0d923067bff7a6ac8b.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 5" />
+                <img src="https://construmartcl.vtexassets.com/arquivos/BLACK AND DECKER.jpg" class="img-fluid mx-3"
+                  style="max-height: 80px" alt="Marca 6" />
+                <img src="https://construmartcl.vtexassets.com/arquivos/BTICINO.jpg" class="img-fluid mx-3"
+                  style="max-height: 80px" alt="Marca 7" />
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/3bcb038c-51b3-4764-9f88-c6e4f938b707___5a373f36ef1b904783dd1f5bd1d0924b.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 8" />
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="d-flex justify-content-center flex-wrap gap-3">
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/f4267700-4779-4d20-a060-b390ef456bb0___a1dc05003e0cff6e54bbdc1d6c5d70c1.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 9" />
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/80376a96-77b6-4e6b-9a74-3d170f7fdde3___42934586afe4ccd2de9e7947898b9033.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 10" />
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/4fa9ee33-a41b-4abe-adfa-38844eb1228e___728b05f2cecbd3e8972f0f1f78e4a0af.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 11" />
+                <img
+                  src="https://construmartcl.vtexassets.com/assets/vtex.file-manager-graphql/images/f78191ea-f23f-4246-babc-40f9c3afd07b___69c3f43fa6e73321b59ee41c3425e45a.jpg"
+                  class="img-fluid mx-3" style="max-height: 80px" alt="Marca 12" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <section class="suscripcion-section">
+      <div class="container text-center">
+        <h2 class="suscripcion-titulo">
+          ¿Quieres recibir ofertas especiales?
+        </h2>
+        <p class="suscripcion-texto">
+          Suscríbete a nuestro boletín para enterarte primero de nuestras
+          promociones y nuevos productos.
+        </p>
+
+        <form method="POST" id="form-suscripcion" class="suscripcion-form">
+          {% csrf_token %}
+          <div class="input-group justify-content-center">
+            <input type="email" name="email" class="form-control suscripcion-input" placeholder="Tu correo electrónico"
+              required />
+            <div class="input-group-append">
+              <button class="btn" style="background-color: #1a5276; color: white" type="submit">
+                Suscribirme
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div id="popup-mensaje" style="display: none; margin-top: 20px" class="alert"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <div class="grupo-1">
+      <div class="box">
+        <figure>
+          <a href="#"><img src="{% static 'img/footer.png' %}" alt="Logo footer" /></a>
+        </figure>
+      </div>
+      <div class="box">
+        <h2>SOBRE NOSOTROS</h2>
+        <p>Maestranzas Unidos S.A. es una empresa de Copiapó dedicada a la fabricación y mantenimiento de
+          equipos pesados para minería y construcción, con más de 20 años de experiencia y compromiso con la excelencia.
+        </p>
+      </div>
+      <div class="box">
+        <h2>SÍGUENOS</h2>
+        <div class="red-social">
+          <a href="#"><img src="{% static 'img/facebook_logo.png' %}" alt="Facebook" width="25" height="25" /></a>
+          <a href="#"><img src="{% static 'img/ig_logo.png' %}" alt="Instagram" width="25" height="25" /></a>
+          <a href="#"><img src="{% static 'img/correo_logo.png' %}" alt="Correo" width="25" height="25" /></a>
+        </div>
+      </div>
+    </div>
+    <div class="grupo-2">
+      <small>©2025 <b>MAESTRANZAS UNIDOS S.A.</b> - Todos Los Derechos Reservados</small>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script>
+    window.jQuery ||
+      document.write(
+        '<script src="{% static "js/jquery.slim.min.js" %}"><\/script>',
+      );
+  </script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("form-suscripcion");
+      const popup = document.getElementById("popup-mensaje");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector(
+          "[name=csrfmiddlewaretoken]",
+        ).value;
+
+        fetch("{% url 'suscripcion' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            popup.style.display = "block";
+            popup.classList.remove("alert-danger", "alert-success");
+
+            if (data.success) {
+              popup.classList.add("alert-success");
+              popup.textContent = data.message;
+              form.reset();
+            } else {
+              popup.classList.add("alert-danger");
+              popup.textContent = data.message;
+            }
+
+            setTimeout(() => {
+              popup.style.display = "none";
+            }, 5000);
+          })
+          .catch((error) => {
+            popup.style.display = "block";
+            popup.classList.add("alert-danger");
+            popup.textContent = "Error al procesar la solicitud.";
+          });
+      });
+    });
+  </script>
+</body>
+
+</html>

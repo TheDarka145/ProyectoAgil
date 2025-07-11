@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu de los Productos</title>
+  {% load static %}
+  <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+  <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}" />
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+
+  <style>
+    .d {
+      font-family: Montserrat, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container__menu">
+      <div class="menu">
+        <input type="checkbox" id="check__menu" />
+        <label for="check__menu" id="label__check">
+          <i class="icon__menu">☰</i>
+        </label>
+        <nav>
+          <ul>
+            <li><a href="{% url 'index' %}"></a></li>
+            <li>
+              <a href="{% url 'tienda' %}">Productos</a>
+              <ul>
+                <li>
+                  <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                </li>
+                <li>
+                  <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                </li>
+              </ul>
+            </li>
+            <li><a href="{% url 'contacto' %}">Contáctanos</a></li>
+            <li><a href="{% url 'Nosotros' %}">Sobre Nosotros</a></li>
+            <li class="search-bar">
+              <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+              <a href="{% url 'perfil' %}"></a>
+              <ul>
+                <li><a href="{% url 'productos' %}">Inventario</a></li>
+                <li><a href="{% url 'listar_boletas' %}">Boletas</a></li>
+                <li><a href="{% url 'cerrar' %}">Cerrar sesión</a></li>
+              </ul>
+            </li>
+            <li><a href="{% url 'carrito' %}"></a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}"></a></li>
+            <li><a href="{% url 'carrito' %}"></a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="form-group text-center">
+      <h1 class="titulo-seccion text-center mb-5" style="font-family: Montserrat, sans-serif;font-weight: 900;color: #2c3e50;font-size: 30px;">
+        Inventario
+       </h1>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="card bg-success text-white shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Total de Productos en Stock</h5>
+            <p class="card-text h4">{{ total_cantidad }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="card bg-info text-white shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Valor Total del Inventario</h5>
+            <p class="card-text h4 precio-clp" data-precio="{{ total_valor }}">{{ total_valor }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3 mb-md-0">
+        {% with datos.count as total_tipos %}
+        <div class="card bg-warning text-white shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Tipos de Productos</h5>
+            <p class="card-text h4 precio-clp">{{ total_tipos }}</p>
+          </div>
+        </div>
+        {% endwith %}
+      </div>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Codigo</th>
+          <th>Nombre</th>
+          <th>Descripcion</th>
+          <th>Categoria</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Imagen</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for Planta in datos %}
+        <tr>
+          <td>
+            <a href="{% url 'detalle' Planta.idPlanta %}" class="btn btn-outline-info">{{ Planta.idPlanta }}</a>
+          </td>
+          <td>{{ Planta.nombre }}</td>
+          <td>{{ Planta.descripcion }}</td>
+          <td>{{ Planta.categoria }}</td>
+          <td>${{ Planta.precio }}</td>
+          <td>{{ Planta.stock }}</td>
+          <td>
+            <img src="{{ Planta.imagen.url }}" style="width: 120px; height: 120px" />
+          </td>
+          <td>
+            <a href="{% url 'modificar' Planta.idPlanta %}" class="btn btn-warning">Actualizar</a>
+          </td>
+          <td>
+            <a href="{% url 'eliminar' Planta.idPlanta %}" class="btn btn-danger">Eliminar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'crear' %}" class="btn btn-success">Agregar Producto</a>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const formatterCLP = new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
+
+      const preciosCLP = document.querySelectorAll('.precio-clp');
+
+      preciosCLP.forEach(el => {
+        const valor = parseFloat(el.dataset.precio);
+        if (!isNaN(valor)) {
+          el.textContent = formatterCLP.format(valor);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

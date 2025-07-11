@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalles de los Productos</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}" />
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="container__menu">
+            <div class="menu">
+                <input type="checkbox" id="check__menu" />
+                <label for="check__menu" id="label__check">
+                    <i class="icon__menu">☰</i>
+                </label>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'index' %}"></a></li>
+                        <li>
+                            <a href="{% url 'tienda' %}">Productos</a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'contacto' %}">Contáctanos</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Nosotros' %}">Sobre Nosotros</a>
+                        </li>
+                        <li class="search-bar">
+                            <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'perfil' %}"></a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'productos' %}">Inventario</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listar_boletas' %}">Boletas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'cerrar' %}">Cerrar sesión</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}"></a></li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 style="text-align: center">Descripción del Producto</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div>
+                    <img src="{{ planta.imagen.url }}" class="card-img-top" style="
+                                border-radius: 8px;
+                                height: 250px;
+                                width: 350;
+                                margin: 5px;
+                            " />
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            ID del Producto: {{planta.idPlanta}}
+                        </h5>
+                        <p class="card-text">Nombre: {{ planta.nombre}}</p>
+                        <p class="card-text">
+                            Descripcion: {{ planta.descripcion}}
+                        </p>
+                        <p class="card-text">
+                            Categoria: {{ planta.categoria}}
+                        </p>
+                        <p class="card-text">Precio:${{ planta.precio}}</p>
+                        <p class="card-text">Stock: {{ planta.stock}}</p>
+
+                        <a href="{% url 'productos' %}" class="btn btn-outline-info">Ir a Productos</a>
+                        <a href="{% url 'modificar' planta.idPlanta %}" class="btn btn-outline-warning">Modificar</a>
+                        <a href="{% url 'eliminar' planta.idPlanta %}" class="btn btn-outline-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

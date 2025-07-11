@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carrito</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}" />
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body style="overflow-x: hidden">
+    <header>
+        <div class="container__menu">
+            <div class="menu">
+                <input type="checkbox" id="check__menu" />
+                <label for="check__menu" id="label__check">
+                    <i class="icon__menu">☰</i>
+                </label>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'index' %}"></a></li>
+                        <li>
+                            <a href="{% url 'tienda' %}">Productos</a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'contacto' %}">Contáctanos</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Nosotros' %}">Sobre Nosotros</a>
+                        </li>
+                        <li class="search-bar">
+                            <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'perfil' %}"></a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'productos' %}">Inventario</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listar_boletas' %}">Boletas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'cerrar' %}">Cerrar sesión</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}"></a></li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div role="alert">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" style="border-radius: 8px; background-color: #f4f7f6">
+                <thead>
+                    <tr class="text-center">
+                        <th colspan="3" style="
+                                    font-weight: bold;
+                                    font-size: 20px;
+                                    color: #1a5276;
+                                    padding: 15px 0;
+                                ">
+                            CARRITO
+                        </th>
+                    </tr>
+                    <tr style="background-color: #1a5276; color: white">
+                        <th style="
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    text-align: center;
+                                ">
+                            NOMBRE
+                        </th>
+                        <th style="
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    text-align: center;
+                                ">
+                            PRECIO
+                        </th>
+                        <th style="
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    text-align: center;
+                                ">
+                            CANTIDAD
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if request.session.carrito %}
+                    {% for value in request.session.carrito.values %}
+                    <tr style="background-color: #fff; border-bottom: 2px solid #e1e1e1;">
+                        <td
+                            style="font-size: 16px; color: #1a5276; font-weight: bold; text-align: center; padding: 15px;">
+                            {{ value.nombre }}
+                        </td>
+                        <td
+                            style="font-size: 16px; color: #1a5276; font-weight: bold; text-align: center; padding: 15px;">
+                            {% if request.session.moneda == 'USD' %}
+                            ${{ value.precio|floatformat:2 }} USD
+                            {% else %}
+                            ${{ value.precio|floatformat:0 }} CLP
+                            {% endif %}
+                        </td>
+                        <td
+                            style="font-size: 16px; color: #1a5276; font-weight: bold; text-align: center; padding: 15px;">
+                            {{ value.cantidad }}<br />
+                            <a href="{% url 'agregar' value.planta_id %}" class="badge badge-light"
+                                style="background-color: #1a5276; color: white; padding: 5px 10px; border-radius: 20px; text-decoration: none;">+</a>
+                            <a href="{% url 'restar' value.planta_id %}" class="badge badge-light"
+                                style="background-color: #34495e; color: white; padding: 5px 10px; border-radius: 20px; text-decoration: none;">-</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: right; font-weight: bold; color: #1a5276;">
+                            Subtotal:
+                        </td>
+                        <td style="text-align: center; font-weight: bold; color: #1a5276;">
+                            {% if request.session.moneda == 'USD' %}
+                            ${{ value.total|floatformat:2 }} USD
+                            {% else %}
+                            ${{ value.total|floatformat:0 }} CLP
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="alert alert-info text-center"
+                                style="font-weight: bold; background-color: #d1e7dd; color: #0f5132;">
+                                Sin productos en el carrito
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+
+            </table>
+        </div>
+        <hr style="border-top: 1px solid #e1e1e1" />
+    </div>
+
+    {% if request.session.carrito %}
+    <div class="container-fluid text-center my-4">
+        <h3 style="color: #1a5276">
+            Seleccione su método de pago y tipo de entrega
+        </h3>
+        <form action="{% url 'procesar_pago' %}" method="POST" id="formPago">
+            {% csrf_token %}
+
+            <div class="form-group" style="text-align: center; margin-bottom: 15px">
+                <label for="metodo_pago" style="
+                            font-size: 14px;
+                            font-weight: bold;
+                            color: #1a5276;
+                            display: block;
+                            margin-bottom: 5px;
+                        ">Método de Pago:</label>
+                <select id="metodo_pago" name="metodo_pago" class="form-control" required style="
+                            width: 200px;
+                            font-size: 14px;
+                            margin: 0 auto;
+                            display: block;
+                        ">
+                    <option value="debito_credito">Débito o Crédito</option>
+                    <option value="transferencia">
+                        Transferencia Bancaria
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group" style="text-align: center; margin-bottom: 15px">
+                <label for="tipo_envio" style="
+                            font-size: 14px;
+                            font-weight: bold;
+                            color: #1a5276;
+                            display: block;
+                            margin-bottom: 5px;
+                        ">Tipo de Entrega:</label>
+                <select id="tipo_envio" name="tipo_envio" class="form-control" required style="
+                            width: 200px;
+                            font-size: 14px;
+                            margin: 0 auto;
+                            display: block;
+                        ">
+                    <option value="retiro">Retiro Presencial</option>
+                    <option value="envio">Envío a domicilio</option>
+                </select>
+            </div>
+
+            <div id="envio_costo" style="display: none; font-weight: bold; color: #1a5276">
+                <p>
+                    El costo de envío es de $4.990 CLP y se añadirá al
+                    total.
+                </p>
+            </div>
+
+            <div id="formulario_envio" class="mt-4" style="
+                        display: none;
+                        text-align: left;
+                        max-width: 500px;
+                        margin: auto;
+                    ">
+                <h4 style="color: #1a5276">Datos de Envío</h4>
+
+                <div class="form-group">
+                    <label for="nombre" style="color: #1a5276">Nombre completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre"
+                        placeholder="Tu nombre completo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono" style="color: #1a5276">Teléfono</label>
+                    <input type="tel" class="form-control" id="telefono" name="telefono"
+                        placeholder="Ej: +56912345678" />
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion" style="color: #1a5276">Dirección</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion"
+                        placeholder="Calle y número" />
+                </div>
+
+                <div class="form-group">
+                    <label for="region" style="color: #1a5276">Región</label>
+                    <select id="region" name="region" class="form-control" required>
+                        <option value="" disabled selected>
+                            Seleccione región
+                        </option>
+                        <option value="Arica y Parinacota">
+                            Arica y Parinacota
+                        </option>
+                        <option value="Tarapacá">Tarapacá</option>
+                        <option value="Antofagasta">Antofagasta</option>
+                        <option value="Atacama">Atacama</option>
+                        <option value="Coquimbo">Coquimbo</option>
+                        <option value="Valparaíso">Valparaíso</option>
+                        <option value="Región Metropolitana">
+                            Región Metropolitana
+                        </option>
+                        <option value="Libertador General Bernardo O'Higgins">
+                            Libertador General Bernardo O'Higgins
+                        </option>
+                        <option value="Maule">Maule</option>
+                        <option value="Ñuble">Ñuble</option>
+                        <option value="Biobío">Biobío</option>
+                        <option value="La Araucanía">La Araucanía</option>
+                        <option value="Los Ríos">Los Ríos</option>
+                        <option value="Los Lagos">Los Lagos</option>
+                        <option value="Aysén">Aysén</option>
+                        <option value="Magallanes y la Antártica Chilena">
+                            Magallanes y la Antártica Chilena
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comuna" style="color: #1a5276">Comuna</label>
+                    <select id="comuna" name="comuna" class="form-control" required disabled>
+                        <option value="" disabled selected>
+                            Seleccione comuna
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div id="map" style="
+                                height: 300px;
+                                width: 100%;
+                                border: 1px solid #ccc;
+                            "></div>
+                </div>
+            </div>
+
+            <div>
+                <p style="color: #1a5276; font-weight: bold">
+                    Total con Envío:
+                    <span id="total_con_envio" data-total="{{ total_carrito }}">{{ total_carrito }}</span>
+                    CLP
+                </p>
+            </div>
+
+            <button type="submit" class="btn" style="
+                        background-color: #1a5276;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: bold;
+                        padding: 12px 30px;
+                        border-radius: 25px;
+                    ">
+                Pagar
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="row text-center" style="padding: 20px 0">
+        {% if request.session.carrito %}
+        <div class="col-6">
+            <a href="{% url 'tienda' %}" class="btn" style="
+                        background-color: #1a5276;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: bold;
+                        padding: 12px 30px;
+                        border-radius: 25px;
+                    ">Seguir comprando</a>
+        </div>
+        <div class="col-6">
+            <a href="{% url 'limpiar' %}" class="btn" style="
+                        background-color: #1a5276;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: bold;
+                        padding: 12px 30px;
+                        border-radius: 25px;
+                    ">Limpiar</a>
+        </div>
+        {% else %}
+        <div class="col-12" style="text-align: center">
+            <p style="font-size: 16px; color: #1a5276">
+                No hay productos en el carrito para comprar.
+            </p>
+            <a href="{% url 'tienda' %}" class="btn" style="
+                        background-color: #1a5276;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: bold;
+                        padding: 12px 30px;
+                        border-radius: 25px;
+                    ">Ir a productos</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function actualizarFormularioEnvio() {
+            const tipoEnvio = document.getElementById("tipo_envio");
+            const envioCosto = document.getElementById("envio_costo");
+            const formularioEnvio =
+                document.getElementById("formulario_envio");
+            const totalConEnvio =
+                document.getElementById("total_con_envio");
+
+            let totalCarrito = parseFloat(
+                "{{ total_carrito|floatformat:0 }}",
+            );
+
+            const camposEnvio =
+                formularioEnvio.querySelectorAll("input, select");
+
+            if (tipoEnvio.value === "envio") {
+                envioCosto.style.display = "block";
+                formularioEnvio.style.display = "block";
+                totalCarrito += 4990;
+
+                camposEnvio.forEach((campo) => {
+                    campo.disabled = false;
+                    campo.required = true;
+                });
+            } else {
+                envioCosto.style.display = "none";
+                formularioEnvio.style.display = "none";
+
+                camposEnvio.forEach((campo) => {
+                    campo.disabled = true;
+                    campo.required = false;
+                });
+            }
+
+            totalConEnvio.innerText = totalCarrito;
+        }
+        document
+            .getElementById("tipo_envio")
+            .addEventListener("change", actualizarFormularioEnvio);
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            actualizarFormularioEnvio,
+        );
+
+        const comunasPorRegion = {
+            "Arica y Parinacota": [
+                "Arica",
+                "Camarones",
+                "Putre",
+                "General Lagos",
+            ],
+            Tarapacá: [
+                "Iquique",
+                "Alto Hospicio",
+                "Pozo Almonte",
+                "Camiña",
+                "Colchane",
+                "Huara",
+                "Pica",
+            ],
+            Antofagasta: [
+                "Antofagasta",
+                "Mejillones",
+                "Sierra Gorda",
+                "Taltal",
+                "Calama",
+                "Ollagüe",
+                "San Pedro de Atacama",
+                "Tocopilla",
+            ],
+            Atacama: [
+                "Copiapó",
+                "Caldera",
+                "Tierra Amarilla",
+                "Chañaral",
+                "Diego de Almagro",
+                "Vallenar",
+                "Alto del Carmen",
+                "Freirina",
+                "Huasco",
+            ],
+            Coquimbo: [
+                "La Serena",
+                "Coquimbo",
+                "Andacollo",
+                "La Higuera",
+                "Paiguano",
+                "Vicuña",
+                "Illapel",
+                "Canela",
+                "Los Vilos",
+                "Salamanca",
+                "Ovalle",
+                "Combarbalá",
+                "Monte Patria",
+                "Punitaqui",
+                "Río Hurtado",
+            ],
+            Valparaíso: [
+                "Valparaíso",
+                "Casablanca",
+                "Concón",
+                "Juan Fernández",
+                "Puchuncaví",
+                "Quintero",
+                "Viña del Mar",
+                "Isla de Pascua",
+                "Los Andes",
+                "Calle Larga",
+                "Rinconada",
+                "San Esteban",
+                "La Ligua",
+                "Cabildo",
+                "Papudo",
+                "Petorca",
+                "Zapallar",
+                "Quillota",
+                "Calera",
+                "Hijuelas",
+                "La Cruz",
+                "San Antonio",
+                "Algarrobo",
+                "Cartagena",
+                "El Quisco",
+                "El Tabo",
+                "Santo Domingo",
+                "San Felipe",
+                "Catemu",
+                "Llaillay",
+                "Panquehue",
+                "Putaendo",
+                "Santa María",
+            ],
+            "Región Metropolitana": [
+                "Cerrillos",
+                "Cerro Navia",
+                "Conchalí",
+                "El Bosque",
+                "Estación Central",
+                "Huechuraba",
+                "Independencia",
+                "La Cisterna",
+                "La Florida",
+                "La Granja",
+                "La Pintana",
+                "La Reina",
+                "Las Condes",
+                "Lo Barnechea",
+                "Lo Espejo",
+                "Lo Prado",
+                "Macul",
+                "Maipú",
+                "Ñuñoa",
+                "Pedro Aguirre Cerda",
+                "Peñalolén",
+                "Providencia",
+                "Pudahuel",
+                "Quilicura",
+                "Quinta Normal",
+                "Recoleta",
+                "Renca",
+                "San Joaquín",
+                "San Miguel",
+                "San Ramón",
+                "Santiago",
+                "Vitacura",
+            ],
+            "Libertador General Bernardo O'Higgins": [
+                "Rancagua",
+                "Codegua",
+                "Coinco",
+                "Coltauco",
+                "Doñihue",
+                "Graneros",
+                "Las Cabras",
+                "Machalí",
+                "Malloa",
+                "Mostazal",
+                "Olivar",
+                "Peumo",
+                "Pichidegua",
+                "Quinta de Tilcoco",
+                "Rengo",
+                "Requínoa",
+                "San Vicente",
+                "Pichilemu",
+                "La Estrella",
+                "Litueche",
+                "Marchihue",
+                "Navidad",
+                "Paredones",
+            ],
+            Maule: [
+                "Talca",
+                "Constitución",
+                "Curepto",
+                "Empedrado",
+                "Maule",
+                "Pelarco",
+                "Pencahue",
+                "Río Claro",
+                "San Clemente",
+                "San Rafael",
+                "Cauquenes",
+                "Chanco",
+                "Pelluhue",
+                "Curicó",
+                "Hualañé",
+                "Licantén",
+                "Molina",
+                "Rauco",
+                "Romeral",
+                "Sagrada Familia",
+                "Vichuquén",
+            ],
+            Ñuble: [
+                "Chillán",
+                "Bulnes",
+                "Cobquecura",
+                "Coelemu",
+                "Coihueco",
+                "El Carmen",
+                "Ninhue",
+                "Pemuco",
+                "Pinto",
+                "Quillón",
+                "Quirihue",
+                "Ránquil",
+                "San Carlos",
+                "San Fabián",
+                "San Ignacio",
+                "San Nicolás",
+                "Treguaco",
+                "Yungay",
+            ],
+            Biobío: [
+                "Concepción",
+                "Coronel",
+                "Chiguayante",
+                "Florida",
+                "Hualqui",
+                "Lota",
+                "Penco",
+                "San Pedro de la Paz",
+                "Santa Juana",
+                "Talcahuano",
+                "Tomé",
+                "Hualpén",
+                "Los Ángeles",
+                "Antuco",
+                "Cabrero",
+                "Laja",
+                "Mulchén",
+                "Nacimiento",
+                "Negrete",
+                "Quilaco",
+                "Quilleco",
+                "San Rosendo",
+                "Santa Bárbara",
+                "Tucapel",
+                "Yumbel",
+                "Alto Biobío",
+            ],
+            "La Araucanía": [
+                "Temuco",
+                "Carahue",
+                "Cunco",
+                "Curarrehue",
+                "Freire",
+                "Galvarino",
+                "Gorbea",
+                "Lautaro",
+                "Loncoche",
+                "Melipeuco",
+                "Nueva Imperial",
+                "Padre Las Casas",
+                "Perquenco",
+                "Pitrufquén",
+                "Pucón",
+                "Saavedra",
+                "Teodoro Schmidt",
+                "Toltén",
+                "Vilcún",
+                "Villarrica",
+                "Cholchol",
+            ],
+            "Los Ríos": [
+                "Valdivia",
+                "Corral",
+                "Lanco",
+                "Los Lagos",
+                "Máfil",
+                "Mariquina",
+                "Paillaco",
+                "Panguipulli",
+            ],
+            "Los Lagos": [
+                "Puerto Montt",
+                "Calbuco",
+                "Cochamó",
+                "Fresia",
+                "Frutillar",
+                "Los Muermos",
+                "Llanquihue",
+                "Maullín",
+                "Puerto Varas",
+                "Castro",
+                "Ancud",
+                "Chonchi",
+                "Curaco de Vélez",
+                "Dalcahue",
+                "Puqueldón",
+                "Queilén",
+                "Quellón",
+                "Quemchi",
+                "Quinchao",
+            ],
+            Aysén: [
+                "Coihaique",
+                "Lago Verde",
+                "Aysén",
+                "Cisnes",
+                "Guaitecas",
+                "Chile Chico",
+                "Río Ibáñez",
+            ],
+            "Magallanes y la Antártica Chilena": [
+                "Punta Arenas",
+                "Laguna Blanca",
+                "Río Verde",
+                "San Gregorio",
+                "Cabo de Hornos",
+                "Antártica",
+                "Porvenir",
+                "Primavera",
+                "Timaukel",
+                "Natales",
+                "Torres del Paine",
+            ],
+        };
+
+        const selectRegion = document.getElementById("region");
+        const selectComuna = document.getElementById("comuna");
+
+        selectRegion.addEventListener("change", function () {
+            const regionSeleccionada = this.value;
+
+            selectComuna.innerHTML =
+                '<option value="" disabled selected>Seleccione comuna</option>';
+
+            if (
+                regionSeleccionada &&
+                comunasPorRegion[regionSeleccionada]
+            ) {
+                comunasPorRegion[regionSeleccionada].forEach(
+                    function (comuna) {
+                        const option = document.createElement("option");
+                        option.value = comuna;
+                        option.textContent = comuna;
+                        selectComuna.appendChild(option);
+                    },
+                );
+                selectComuna.disabled = false;
+            } else {
+                selectComuna.disabled = true;
+            }
+        });
+
+        let map, marker;
+
+        function initMap() {
+            map = L.map("map").setView([-33.45, -70.66], 13);
+
+            L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    attribution: "&copy; OpenStreetMap contributors",
+                },
+            ).addTo(map);
+
+            marker = L.marker([-33.45, -70.66]).addTo(map);
+        }
+
+        function buscarDireccion() {
+            const direccion = document.getElementById("direccion").value;
+            const region = document.getElementById("region").value;
+            const comuna = document.getElementById("comuna").value;
+
+            const fullAddress = `${direccion}, ${comuna}, ${region}, Chile`;
+
+            if (direccion.length < 5) return;
+
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}`;
+
+            fetch(url)
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.length > 0) {
+                        const lat = parseFloat(data[0].lat);
+                        const lon = parseFloat(data[0].lon);
+
+                        map.setView([lat, lon], 15);
+                        marker.setLatLng([lat, lon]);
+                    }
+                })
+                .catch((err) =>
+                    console.error("Error al buscar dirección:", err),
+                );
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initMap();
+
+            document
+                .getElementById("direccion")
+                .addEventListener("input", buscarDireccion);
+            document
+                .getElementById("region")
+                .addEventListener("change", buscarDireccion);
+            document
+                .getElementById("comuna")
+                .addEventListener("change", buscarDireccion);
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const totalConEnvioEl =
+                document.getElementById("total_con_envio");
+            if (totalConEnvioEl) {
+                const rawTotal = parseFloat(totalConEnvioEl.dataset.total);
+                totalConEnvioEl.innerText =
+                    rawTotal.toLocaleString("es-CL");
+            }
+        });
+    </script>
+</body>
+
+</html>

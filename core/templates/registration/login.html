@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/icono_navegador.png' %}">
+    <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="container__menu">
+            <div class="menu">
+                <input type="checkbox" id="check__menu">
+                <label for="check__menu" id="label__check">
+                    <i class="icon__menu">☰</i>
+                </label>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'index' %}"></a></li>
+                        <li>
+                            <a href="{% url 'tienda' %}">Productos</a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'contacto' %}">Contáctanos</a></li>
+                        <li><a href="{% url 'Nosotros' %}">Sobre Nosotros</a></li>
+                        <li class="search-bar">
+                            <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'perfil' %}"></a>
+                            <ul>
+                                <li><a href="{% url 'productos' %}">Inventario</a></li>
+                                <li><a href="{% url 'listar_boletas' %}">Boletas</a></li>
+                                <li><a href="{% url 'cerrar' %}">Cerrar sesión</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}"></a></li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="login">
+        <div class="formulario_login">
+            <form action="" method="POST">
+
+                {% csrf_token %}
+
+                <a class="volver" href="{% url 'index' %}">
+                    <img src="{% static 'img/atras.png' %}" alt="Volver"> </a>
+
+                <h2>Inicio de sesión</h2>
+
+                <label for="email">Usuario</label>
+                {{form.username}}
+
+                <label for="pass">Contraseña</label>
+                {{form.password}}
+
+                <div>
+                    {% if form.errors %}
+                    <p style="color: red; font-size: 12px;">Usuario y/o contraseña incorrecto. Inténtalo de nuevo.</p>
+                    {% endif %}
+                </div>
+
+                <input type="submit" class="btn-1" value="Iniciar sesion">
+
+                <div class="rc">
+                    <a href="{% url 'password_reset' %}" style="color: #575757;">¿Olvidaste tu contraseña?</a>
+                    <p>¿No tienes una cuenta? <a href="{% url 'registrar' %}" style="color: #3498db;">Regístrate</a></p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <footer class="pie-pagina">
+        <div class="grupo-1">
+            <div class="box">
+                <figure>
+                    <a href="#">
+                        <img src="{% static 'img/footer.png' %}" alt="Logo Footer">
+                    </a>
+                </figure>
+            </div>
+            <div class="box">
+                <h2>SOBRE NOSOTROS</h2>
+                <p>Maestranzas Unidos S.A. es una empresa de Copiapó dedicada a la fabricación y mantenimiento de
+                    equipos pesados para minería y construcción, con más de 20 años de experiencia y compromiso con la
+                    excelencia.</p>
+            </div>
+            <div class="box">
+                <h2>SÍGUENOS</h2>
+                <div class="red-social">
+                    <a href="#"><img src="{% static 'img/facebook_logo.png' %}" alt="Facebook" width="25"
+                            height="25"></a>
+                    <a href="#"><img src="{% static 'img/ig_logo.png' %}" alt="Instagram" width="25" height="25"></a>
+                    <a href="#"><img src="{% static 'img/correo_logo.png' %}" alt="Correo" width="25" height="25"></a>
+                </div>
+            </div>
+        </div>
+        <div class="grupo-2">
+            <small>©2025 <b>MAESTRANZAS UNIDOS S.A.</b> - Todos los derechos reservados</small>
+        </div>
+    </footer>
+</body>
+
+</html>

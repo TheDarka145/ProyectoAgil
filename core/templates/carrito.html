@@ -1,0 +1,73 @@
+<div role="alert">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr class="text-center">
+                <td colspan="3" style="font-weight:bold; font-size:18px; color: #1A5276;">CARRITO</td>
+            </tr>
+            <tr>
+                <th style="font-size:15px; font-weight: bold; color:#1A5276; text-align: center;">NOMBRE</th>
+                <th style="font-size:15px; font-weight: bold; color:#1A5276; text-align: center;">PRECIO</th>
+                <th style="font-size:15px; font-weight: bold; color:#1A5276; text-align: center;">CANTIDAD</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if request.session.carrito.items %}
+            {% for key, value in request.session.carrito.items %}
+            <tr>
+                <td style="font-size:16px; color: #1A5276; font-weight: bold; text-align: center;">{{ value.nombre }}
+                </td>
+                <td style="font-size:16px; color: #1A5276; font-weight: bold; text-align: center;">
+                    {% if request.session.moneda == 'USD' %}
+                    ${{ value.precio|floatformat:2 }} USD
+                    {% else %}
+                    ${{ value.precio|floatformat:0 }} CLP
+                    {% endif %}
+                </td>
+                <td style="font-size:16px; color: #1A5276; font-weight: bold; text-align: center;">
+                    {{ value.cantidad }}
+                    <br>
+                    <a href="{% url 'agregar' value.planta_id %}" class="badge"
+                        style="background-color: #1A5276; color:white;">+</a>
+                    <a href="{% url 'restar' value.planta_id %}" class="badge"
+                        style="background-color: #34495E; color:white;">-</a>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2" style="color: #1A5276; text-align: center;">SubTotal: </th>
+                <td colspan="row" style="color: #1A5276; font-weight: bold; text-align: center;">
+                    {% if request.session.moneda == 'USD' %}
+                    ${{ value.total|floatformat:2 }} USD
+                    {% else %}
+                    ${{ value.total|floatformat:0 }} CLP
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="3" class="text-center">
+                    <div class="alert alert-info" style="font-weight: bold; color: #1A5276;">Sin productos en el carrito
+                    </div>
+                </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <hr>
+</div>
+
+<div class="row text-center">
+    <div class="col-12 d-flex justify-content-center">
+        {% if request.session.carrito.items %}
+        <div class="mx-2">
+            <a href="{% url 'limpiar' %}" class="btn" style="background-color: #1A5276; color:white;">Limpiar
+                Carrito</a>
+        </div>
+        <div class="mx-2">
+            <a href="{% url 'carrito' %}" class="btn" style="background-color: #1A5276; color:white;">Ir a Pagar</a>
+        </div>
+        {% else %}
+        <p style="font-size: 16px; color: #1A5276;">No hay productos en el carrito para comprar.</p>
+        {% endif %}
+    </div>
+</div>

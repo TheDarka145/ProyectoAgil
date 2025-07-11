@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Comprobante de Compra</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px; color: #333;">
+  <div
+    style="max-width: 600px; margin: 0 auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
+
+    <h2 style="color: #007bff; text-align: center;">¡Gracias por tu compra! 🎉</h2>
+    <p style="text-align: center;">Boleta <strong>#{{ boleta.id_boleta }}</strong> emitida el <strong>{{ fecha
+        }}</strong></p>
+
+    <hr style="margin: 20px 0;">
+
+    <h3 style="color: #343a40;">🛒 Detalle de productos:</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+      <thead>
+        <tr style="background-color: #e9ecef;">
+          <th style="padding: 8px; text-align: left;">Producto</th>
+          <th style="padding: 8px; text-align: center;">Cantidad</th>
+          <th style="padding: 8px; text-align: right;">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prod in productos %}
+        <tr>
+          <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ prod.id_producto.nombre }}</td>
+          <td style="padding: 8px; text-align: center; border-bottom: 1px solid #dee2e6;">{{ prod.cantidad }}</td>
+          <td style="padding: 8px; text-align: right; border-bottom: 1px solid #dee2e6;">${{ prod.subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p style="font-size: 16px;"><strong>Total:</strong> ${{ total }}</p>
+    <p style="font-size: 16px;"><strong>Tipo de envío:</strong> {{ tipo_envio|title }}</p>
+
+    <hr style="margin: 20px 0;">
+
+    <p style="font-size: 14px;">📧 Si tienes alguna duda, no dudes en contactarnos a <strong>{{ correo }}</strong></p>
+    <p style="text-align: center; margin-top: 30px; font-size: 13px; color: #6c757d;">Este es un comprobante automático,
+      por favor no respondas a este correo.</p>
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Boletas | Ferremas</title>
+
+    {% load static %}
+    {% load humanize %}
+
+    <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        .container {
+            max-width: 1000px;
+        }
+
+        .card-title {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container__menu">
+            <div class="menu">
+                <input type="checkbox" id="check__menu" />
+                <label for="check__menu" id="label__check">
+                    <i class="icon__menu">☰</i>
+                </label>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'index' %}"></a></li>
+                        <li>
+                            <a href="{% url 'tienda' %}">Productos</a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'contacto' %}">Contáctanos</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Nosotros' %}">Sobre Nosotros</a>
+                        </li>
+                        <li class="search-bar">
+                            <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'perfil' %}"></a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'productos' %}">Inventario</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listar_boletas' %}">Boletas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'cerrar' %}">Cerrar sesión</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}"></a></li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <h1 class="titulo-seccion text-center mb-5" style="font-family: Montserrat, sans-serif;font-weight: 900;color: #2c3e50;font-size: 40px;">
+            Historial de Boletas
+        </h1>
+
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card bg-success text-white shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Ventas</h5>
+                        <p class="card-text h4 precio-clp" data-precio="{{ total_ventas }}">{{ total_ventas }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card bg-info text-white shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Cantidad de Boletas</h5>
+                        <p class="card-text h4">{{ cantidad_boletas }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card bg-warning text-white shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Promedio de Venta</h5>
+                        <p class="card-text h4 precio-clp" data-precio="{{ promedio_venta }}">{{ promedio_venta }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form method="GET" class="mb-4">
+            <div class="form-row align-items-end">
+                <div class="col-md-4 mb-2">
+                    <label for="fecha_inicio" class="sr-only">Desde</label>
+                    <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" placeholder="Desde">
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label for="fecha_fin" class="sr-only">Hasta</label>
+                    <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" placeholder="Hasta">
+                </div>
+                <div class="col-md-2 mb-2">
+                    <button type="submit" class="btn btn-primary btn-block">Filtrar</button>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'exportar_boletas_excel' %}" class="btn btn-outline-success btn-block">
+                        Exportar
+                    </a>
+                </div>
+            </div>
+        </form>
+
+
+        {% if boletas %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID de Boleta</th>
+                        <th>Total</th>
+                        <th>Fecha de Compra</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for boleta in boletas %}
+                    <tr>
+                        <td>{{ boleta.id_boleta }}</td>
+                        <!-- Agregué clase y data-precio -->
+                        <td class="precio-clp" data-precio="{{ boleta.total }}">{{ boleta.total }}</td>
+                        <td>{{ boleta.fechaCompra|date:"d-m-Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'detalle_boleta' boleta.id_boleta %}" class="btn btn-info btn-sm">
+                                Ver Detalles
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <nav aria-label="Navegación de página">
+            <ul class="pagination justify-content-center">
+                {% if boletas.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo;&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ boletas.previous_page_number }}">&laquo;</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">Página {{ boletas.number }} de {{ boletas.paginator.num_pages }}</span>
+                </li>
+
+                {% if boletas.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ boletas.next_page_number }}">&raquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ boletas.paginator.num_pages }}">&raquo;&raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            No hay boletas disponibles para mostrar.
+        </div>
+        {% endif %}
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formatterCLP = new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+
+            const preciosCLP = document.querySelectorAll('.precio-clp');
+
+            preciosCLP.forEach(el => {
+                const valor = parseFloat(el.dataset.precio);
+                if (!isNaN(valor)) {
+                    el.textContent = formatterCLP.format(valor);
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

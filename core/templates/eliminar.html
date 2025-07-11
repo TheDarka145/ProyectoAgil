@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elimar Producto</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/icono_navegador.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/misEstilos.css' %}" />
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="container__menu">
+            <div class="menu">
+                <input type="checkbox" id="check__menu" />
+                <label for="check__menu" id="label__check">
+                    <i class="icon__menu">☰</i>
+                </label>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'index' %}"></a></li>
+                        <li>
+                            <a href="{% url 'tienda' %}">Productos</a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Manuales</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'contacto' %}">Contáctanos</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Nosotros' %}">Sobre Nosotros</a>
+                        </li>
+                        <li class="search-bar">
+                            <input type="text" placeholder="¿Qué buscas?" class="form-control" />
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'perfil' %}"></a>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'productos' %}">Inventario</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listar_boletas' %}">Boletas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'cerrar' %}">Cerrar sesión</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}"></a></li>
+                        <li><a href="{% url 'carrito' %}"></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2>Eliminando Planta</h2>
+        <br />
+
+        <form action="#" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="idPlanta">Id Planta: </label>
+                {{ planta.idPlanta }}
+            </div>
+
+            <div class="form-group">
+                <label for="nombre">Marca Nombre: </label>
+                {{ planta.nombre }}
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Descripcion: </label>
+                {{ planta.descripcion }}
+            </div>
+
+            <div class="form-group">
+                <label for="categoria">Categoria: </label>
+                {{ planta.categoria }}
+            </div>
+
+            <div class="form-group">
+                <label for="precio">Precio: </label>
+                {{ planta.precio }}
+            </div>
+
+            <div class="form-group">
+                <label for="stock">Stock: </label>
+                {{ planta.stock }}
+            </div>
+
+            <img src="{{ planta.imagen.url }}" width="200px" /> <br />
+            <div class="form-group">
+                <label for="imagen">Imagen: </label>
+                {{ planta.imagen }}
+            </div>
+            <br />
+
+            <input type="submit" value="Confirmar Eliminación" name="elimina" class="btn btn-outline-danger" />
+            <a href="{% url 'productos' %}" class="btn btn-outline-primary">Productos</a>
+        </form>
+    </main>
+</body>
+
+</html>
