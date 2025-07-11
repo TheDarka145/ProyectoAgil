@@ -1,4 +1,4 @@
-modules = ["web", "python-3.12", "nodejs-20"]
+modules = ["web", "python-3.12", "nodejs-20", "nix"]
 run = "python manage.py runserver 0.0.0.0:8000"
 [nix]
 channel = "stable-24_05"
@@ -6,4 +6,7 @@ channel = "stable-24_05"
 [[ports]]
 localPort = 8000
 externalPort = 80
+
+[deployment]
+run = ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
 

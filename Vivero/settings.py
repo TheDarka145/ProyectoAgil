@@ -27,7 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://56c92eb4-6fb3-4986-a4ec-bf1e200abad0-00-dn6zyxf59efw.janeway.replit.dev',
+    'https://7eb92a94-aaaf-4865-903f-f176f280be41-00-lfw5zt0l473s.picard.replit.dev',
 ]
 
 # Application definition

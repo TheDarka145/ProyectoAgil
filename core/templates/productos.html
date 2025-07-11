@@ -35,13 +35,13 @@
                   <a href="{% url 'tienda' %}">Herramientas Manuales</a>
                 </li>
                 <li>
-                  <a href="{% url 'tienda' %}">Herramientas Eléctricas</a>
+                  <a href="{% url 'tienda' %}">Aceites Industriales</a>
                 </li>
                 <li>
-                  <a href="{% url 'tienda' %}">Materiales de Construcción</a>
+                  <a href="{% url 'tienda' %}">Equipos de Soldadura</a>
                 </li>
                 <li>
-                  <a href="{% url 'tienda' %}">Pinturas y Selladores</a>
+                  <a href="{% url 'tienda' %}">Herramientas Industriales</a>
                 </li>
               </ul>
             </li>
@@ -76,6 +76,25 @@
         Inventario
        </h1>
     </div>
+
+    <form method="GET" class="mb-4 d-flex flex-wrap justify-content-between align-items-center" style="gap: 10px;">
+      <input type="text" name="buscar" placeholder="Buscar producto..." value="{{ request.GET.buscar }}" 
+        style="flex: 1 1 300px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" class="form-control">
+
+      <select name="categoria" class="form-control" style="flex: 1 1 200px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+        <option value="">Todas las Categorías</option>
+        {% for cat in categorias %}
+          <option value="{{ cat.idCategoria }}" {% if categoria_seleccionada == cat.idCategoria|stringformat:"s" %}selected{% endif %}>
+            {{ cat.NombreCategoria }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">
+        Buscar
+      </button>
+    </form>
+
 
     <div class="row mb-4">
       <div class="col-md-4 mb-3 mb-md-0">

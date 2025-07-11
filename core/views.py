@@ -20,15 +20,11 @@ from random import randint
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Sum
+from django.db.models import Sum, Avg, F, FloatField
 import openpyxl
-from django.db.models import Sum, Avg, F
-from django.shortcuts import render
 
 def index(request):
     return render(request, 'index.html')
-
-from django.db.models import Sum, F, FloatField
 
 @login_required
 def productos(request):
@@ -36,17 +32,25 @@ def productos(request):
         return render(request, '404.html')
 
     datos = Planta.objects.all()
+    categorias = Categoria.objects.all()
 
-    # Calcular la cantidad total en inventario
+    buscar = request.GET.get('buscar')
+    if buscar:
+        datos = datos.filter(nombre__icontains=buscar)
+
+    categoria_seleccionada = request.GET.get('categoria')
+    if categoria_seleccionada:
+        datos = datos.filter(categoria__idCategoria=categoria_seleccionada)
+
     total_cantidad = datos.aggregate(total_stock=Sum('stock'))['total_stock'] or 0
 
-    # Calcular el valor total del inventario: suma(stock * precio)
     total_valor = datos.aggregate(
         total_valor=Sum(F('stock') * F('precio'), output_field=FloatField())
     )['total_valor'] or 0
 
     return render(request, 'productos.html', {
         "datos": datos,
+        "categorias": categorias,
         "total_cantidad": total_cantidad,
         "total_valor": total_valor,
     })
