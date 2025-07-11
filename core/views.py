@@ -325,7 +325,7 @@ def suscripcion(request):
             <p style="font-size:16px;">Nos alegra que formes parte de nuestra comunidad.</p>
             <p style="font-size:16px;">A partir de ahora, te llegarán ofertas exclusivas y novedades sobre nuestros productos.</p>
             <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnYyejJrOTh4YXo4MnA3ejB4a25vcGw5YWkybXd5bWF4YmhuOXBlaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/zs19LOebTcTHCZhedn/giphy.gif" alt="Suscripción exitosa" style="width:80%; max-width:400px; margin:20px auto;" />
-            <p><a href="http://127.0.0.1:8000/" style="display:inline-block; background-color:#1A5276; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">Visita nuestra tienda</a></p>
+            <p><a href="https://7eb92a94-aaaf-4865-903f-f176f280be41-00-lfw5zt0l473s.picard.replit.dev/" style="display:inline-block; background-color:#1A5276; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">Visita nuestra tienda</a></p>
             <p style="color:gray; font-size:12px;">Este correo fue enviado por Maestranzas. Gracias por confiar en nosotros.</p>
         </div>
         """

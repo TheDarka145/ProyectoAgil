@@ -31,13 +31,12 @@ html, body {
 
 .pie-pagina .grupo-1 .box figure {
     width: 100%;
-    width: 100%;
     display: flex;
     align-items: center;
 }
 
 .pie-pagina .grupo-1 .box figure img {
-    width: 250px;
+    width: 150px;
     text-align: center;
 }
 
